@@ -226,7 +226,11 @@ qualifying drug exposure recorded around the index date.
             ui.output_table("char_table"),
         ),
     ),
-    title="VALUE Study — TMUCRD Report",
+    title=ui.tags.span(
+        ui.tags.img(src="ohdsi-logo.png", height="32px", style="margin-right:10px;vertical-align:middle;"),
+        "VALUE Study — TMUCRD Report",
+        style="display:flex;align-items:center;",
+    ),
     id="navbar",
 )
 
