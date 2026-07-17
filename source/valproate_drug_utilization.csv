@@ -1,0 +1,43 @@
+"Variable","Estimate","Value"
+"cumulative quantity","mean",514.39432084445
+"cumulative quantity","median",35
+"cumulative quantity","q25",9
+"cumulative quantity","q75",238
+"cumulative quantity","sd",1698.96296851847
+"days exposed","mean",284.370954645633
+"days exposed","median",32
+"days exposed","q25",10
+"days exposed","q75",170
+"days exposed","sd",699.088676224894
+"days prescribed","mean",299.14673471755
+"days prescribed","median",35
+"days prescribed","q25",13
+"days prescribed","q75",175
+"days prescribed","sd",765.226477203357
+"initial exposure duration","mean",10.8567451571743
+"initial exposure duration","median",7
+"initial exposure duration","q25",3
+"initial exposure duration","q75",14
+"initial exposure duration","sd",12.9629584730727
+"initial quantity","mean",17.1444124811507
+"initial quantity","median",7
+"initial quantity","q25",3
+"initial quantity","q75",28
+"initial quantity","sd",27.1124331753077
+"number eras","mean",2.86068901519545
+"number eras","median",1
+"number eras","q25",1
+"number eras","q75",2
+"number eras","sd",5.71627796888381
+"number exposures","mean",14.8806402969493
+"number exposures","median",5
+"number exposures","q25",2
+"number exposures","q75",12
+"number exposures","sd",30.1699251357875
+"number records","count",8621
+"number subjects","count",8621
+"time to exposure","mean",1484.49553416077
+"time to exposure","median",758
+"time to exposure","q25",13
+"time to exposure","q75",2555
+"time to exposure","sd",1739.26278236244
