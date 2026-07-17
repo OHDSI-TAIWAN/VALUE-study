@@ -76,13 +76,10 @@ partner in the VALUE study, covering 2005–2023 among ages 18–49.
 
 Use the tabs above to explore:
 
-- **Prevalence** — interactive year-by-year prevalence of valproate
-  use, overall and stratified by sex.
-- **Incidence** — annual incidence rates and person-years contributed.
-- **Drug Utilization** — treatment duration, dose, and prescribing
-  intensity, overall and by year.
-- **Indication** — recorded diagnoses (epilepsy, bipolar disorder,
-  migraine) around treatment initiation.
+- **Prevalence & Incidence** — interactive year-by-year prevalence and
+  incidence of valproate use, overall and stratified by sex.
+- **Drug Utilization** — treatment duration, dose, prescribing
+  intensity, and recorded indications for valproate use.
 - **Characteristics** — demographic, comorbidity, and co-medication
   profile of the valproate-user cohort (Table 1).
 """
@@ -90,9 +87,53 @@ Use the tabs above to explore:
             ),
             col_widths=[7, 5],
         ),
+        ui.layout_columns(
+            ui.card(
+                ui.card_header("Cohort definition"),
+                ui.markdown(
+                    """
+**Name:** Valproate (new user cohort)
+
+**Concept set:** Valproate / valproate semisodium / valproate sodium
+(RxNorm ingredient 745466, Code 40254) and all descendant concepts,
+including monotherapy and multicomponent formulations.
+
+**Entry event:** First qualifying drug exposure to a concept in the
+Valproate concept set, with quantity > 1, during an observation period
+between 2000-01-01 and 2023-12-31.
+
+**Inclusion rule:** "Valproate among Childbearing Age" — at least one
+qualifying drug exposure recorded around the index date.
+
+**Cohort exit:** End of continuous drug exposure (persistence window).
+"""
+                ),
+            ),
+            ui.card(
+                ui.card_header("Cohort size"),
+                ui.layout_columns(
+                    ui.value_box(
+                        "Patients",
+                        "8,621",
+                        showcase=None,
+                    ),
+                    ui.value_box(
+                        "Records",
+                        "8,621",
+                        showcase=None,
+                    ),
+                    col_widths=[6, 6],
+                ),
+                ui.markdown(
+                    "Counts reflect the valproate outcome cohort used for baseline "
+                    "characterization and drug utilization analyses (TMUCRD, ages 18–49)."
+                ),
+            ),
+            col_widths=[7, 5],
+        ),
     ),
     ui.nav_panel(
-        "Prevalence",
+        "Prevalence & Incidence",
         ui.layout_sidebar(
             ui.sidebar(
                 ui.input_checkbox_group(
@@ -119,64 +160,63 @@ Use the tabs above to explore:
                 ui.card_header("Underlying data"),
                 ui.output_table("prevalence_table"),
             ),
-        ),
-    ),
-    ui.nav_panel(
-        "Incidence",
-        ui.layout_columns(
             ui.card(
-                ui.card_header("Incidence by sex"),
+                ui.card_header(
+                    "Incidence by sex (full study period, 2005–2023 — not affected by year filter above)"
+                ),
                 ui.img(src="Incidence_by_sex_0.png", style="max-width:100%;"),
             ),
             ui.card(
-                ui.card_header("Person-years by calendar year"),
+                ui.card_header(
+                    "Person-years by calendar year (full study period, 2005–2023)"
+                ),
                 ui.img(src="Incidence_person_years_0.png", style="max-width:100%;"),
             ),
-            col_widths=[6, 6],
         ),
     ),
     ui.nav_panel(
         "Drug Utilization",
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Utilization summary (median, IQR)"),
-                ui.img(src="Drug_Utilization_Summary.png", style="max-width:100%;"),
+        ui.navset_tab(
+            ui.nav_panel(
+                "Utilization",
+                ui.layout_columns(
+                    ui.card(
+                        ui.card_header("Utilization summary (median, IQR)"),
+                        ui.img(src="Drug_Utilization_Summary.png", style="max-width:100%;"),
+                    ),
+                    ui.card(
+                        ui.card_header("Prescription rate per 1,000 population"),
+                        ui.img(src="Prescription_Rate_Both.png", style="max-width:100%;"),
+                    ),
+                    ui.card(
+                        ui.card_header("Trends over time (median by index year)"),
+                        ui.img(src="Drug_Utilization_Trends_by_Year.png", style="max-width:100%;"),
+                    ),
+                    ui.card(
+                        ui.card_header("Prescription rate by sex"),
+                        ui.img(src="Prescription_Rate_by_Sex.png", style="max-width:100%;"),
+                    ),
+                    ui.card(
+                        ui.card_header("Summary statistics"),
+                        ui.output_table("drug_utilization_table"),
+                    ),
+                    col_widths=[6, 6, 6, 6, 12],
+                ),
             ),
-            ui.card(
-                ui.card_header("Prescription rate per 1,000 population"),
-                ui.img(src="Prescription_Rate_Both.png", style="max-width:100%;"),
+            ui.nav_panel(
+                "Indication",
+                ui.layout_columns(
+                    ui.card(
+                        ui.card_header("Indication for valproate use (30 days before to index date)"),
+                        ui.img(src="Indication_valproate.png", style="max-width:100%;"),
+                    ),
+                    ui.card(
+                        ui.card_header("Indication proportions"),
+                        ui.output_table("indication_table"),
+                    ),
+                    col_widths=[7, 5],
+                ),
             ),
-            ui.card(
-                ui.card_header("Trends over time (median by index year)"),
-                ui.img(src="Drug_Utilization_Trends_by_Year.png", style="max-width:100%;"),
-            ),
-            ui.card(
-                ui.card_header("Prescription rate by sex"),
-                ui.img(src="Prescription_Rate_by_Sex.png", style="max-width:100%;"),
-            ),
-            ui.card(
-                ui.card_header("Exposure records per patient per year, by sex"),
-                ui.img(src="Exposure_per_Patient_by_Sex.png", style="max-width:100%;"),
-            ),
-            ui.card(
-                ui.card_header("Summary statistics"),
-                ui.output_table("drug_utilization_table"),
-            ),
-            col_widths=[6, 6, 6, 6, 12, 12],
-        ),
-    ),
-    ui.nav_panel(
-        "Indication",
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Indication for valproate use (30 days before to index date)"),
-                ui.img(src="Indication_valproate.png", style="max-width:100%;"),
-            ),
-            ui.card(
-                ui.card_header("Indication proportions"),
-                ui.output_table("indication_table"),
-            ),
-            col_widths=[7, 5],
         ),
     ),
     ui.nav_panel(
