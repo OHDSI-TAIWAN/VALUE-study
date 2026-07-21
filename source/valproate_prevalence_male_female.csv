@@ -1,4 +1,4 @@
-Year,N total patients (male),N valproate users (male),Rate of valproate use (male),N total patients (female),N valproate users (female),Rate of valproate use (female)
+"Year","N total patients (male)","N valproate users (male)","Rate of valproate use (male)","N total patients (female)","N valproate users (female)","Rate of valproate use (female)"
 2005,38926,577,0.01482,57151,603,0.01055
 2006,57356,742,0.01294,80756,769,0.00952
 2007,70586,876,0.01241,96736,876,0.00906
@@ -18,3 +18,4 @@ Year,N total patients (male),N valproate users (male),Rate of valproate use (mal
 2021,240374,1752,0.00729,289614,1526,0.00527
 2022,223764,1572,0.00703,266961,1307,0.0049
 2023,160538,1250,0.00779,200647,1071,0.00534
+NA,NA,NA,NA,NA,NA,NA

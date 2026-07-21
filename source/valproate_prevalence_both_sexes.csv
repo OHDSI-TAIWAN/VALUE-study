@@ -1,4 +1,4 @@
-Year,N total patients (both),N valproate users (both),Rate of valproate use (both)
+"Year","N total patients (both)","N valproate users (both)","Rate of valproate use (both)"
 2005,96077,1180,0.01228
 2006,138112,1511,0.01094
 2007,167322,1752,0.01047
@@ -18,3 +18,4 @@ Year,N total patients (both),N valproate users (both),Rate of valproate use (bot
 2021,529988,3278,0.00619
 2022,490725,2879,0.00587
 2023,361185,2321,0.00643
+NA,NA,NA,NA

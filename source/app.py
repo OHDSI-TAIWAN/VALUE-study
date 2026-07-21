@@ -9,8 +9,10 @@ here = Path(__file__).parent
 # ---------------------------------------------------------------------------
 # Data
 # ---------------------------------------------------------------------------
-both = pd.read_csv(here / "valproate_prevalence_both_sexes.csv")
-sex = pd.read_csv(here / "valproate_prevalence_male_female.csv")
+both = pd.read_csv(here / "valproate_prevalence_both_sexes.csv").dropna(subset=["Year"])
+both["Year"] = both["Year"].astype(int)
+sex = pd.read_csv(here / "valproate_prevalence_male_female.csv").dropna(subset=["Year"])
+sex["Year"] = sex["Year"].astype(int)
 char = pd.read_csv(here / "characteristics.csv")
 
 char["_section"] = None
@@ -22,6 +24,9 @@ du = pd.read_csv(here / "valproate_drug_utilization.csv")
 du_wide = du.pivot(index="Variable", columns="Estimate", values="Value")
 
 exposure_both = pd.read_csv(here / "valproate_exposure_per_patient_both.csv")
+
+rx_both = pd.read_csv(here / "valproate_prescription_rate_both.csv")
+rx_sex = pd.read_csv(here / "valproate_prescription_rate_by_sex.csv")
 
 indication = pd.read_csv(here / "valproate_indication.csv")
 indication_pct = indication[indication["estimate_name"] == "percentage"][
@@ -179,28 +184,47 @@ qualifying drug exposure recorded around the index date.
         ui.navset_tab(
             ui.nav_panel(
                 "Utilization",
-                ui.layout_columns(
-                    ui.card(
-                        ui.card_header("Utilization summary (median, IQR)"),
-                        ui.img(src="Drug_Utilization_Summary.png", style="max-width:100%;"),
+                ui.layout_sidebar(
+                    ui.sidebar(
+                        ui.input_checkbox_group(
+                            "rx_series",
+                            "Show series",
+                            choices={"both": "Both sexes", "male": "Male", "female": "Female"},
+                            selected=["both", "male", "female"],
+                        ),
+                        ui.input_slider(
+                            "rx_yr_range",
+                            "Year range",
+                            min=int(rx_both["year"].min()),
+                            max=int(rx_both["year"].max()),
+                            value=(int(rx_both["year"].min()), int(rx_both["year"].max())),
+                            step=1,
+                            sep="",
+                        ),
+                    ),
+                    ui.layout_columns(
+                        ui.card(
+                            ui.card_header("Utilization summary (median, IQR)"),
+                            ui.img(src="Drug_Utilization_Summary.png", style="max-width:100%;"),
+                        ),
+                        ui.card(
+                            ui.card_header("Trends over time (median by index year)"),
+                            ui.img(src="Drug_Utilization_Trends_by_Year.png", style="max-width:100%;"),
+                        ),
+                        col_widths=[6, 6],
                     ),
                     ui.card(
-                        ui.card_header("Prescription rate per 1,000 population"),
-                        ui.img(src="Prescription_Rate_Both.png", style="max-width:100%;"),
+                        ui.card_header("Prescription rate per 1,000 population, TMUCRD"),
+                        ui.output_plot("prescription_rate_plot"),
                     ),
                     ui.card(
-                        ui.card_header("Trends over time (median by index year)"),
-                        ui.img(src="Drug_Utilization_Trends_by_Year.png", style="max-width:100%;"),
-                    ),
-                    ui.card(
-                        ui.card_header("Prescription rate by sex"),
-                        ui.img(src="Prescription_Rate_by_Sex.png", style="max-width:100%;"),
+                        ui.card_header("Prescription rate — underlying data"),
+                        ui.output_table("prescription_rate_table"),
                     ),
                     ui.card(
                         ui.card_header("Summary statistics"),
                         ui.output_table("drug_utilization_table"),
                     ),
-                    col_widths=[6, 6, 6, 6, 12],
                 ),
             ),
             ui.nav_panel(
@@ -286,6 +310,41 @@ def server(input, output, session):
     def drug_utilization_table():
         cols = [c for c in ["count", "mean", "sd", "min", "q25", "median", "q75", "max"] if c in du_wide.columns]
         return du_wide.reset_index()[["Variable", *cols]]
+
+    @output
+    @render.plot
+    def prescription_rate_plot():
+        lo, hi = input.rx_yr_range()
+        b = rx_both[(rx_both["year"] >= lo) & (rx_both["year"] <= hi)]
+        s = rx_sex[(rx_sex["year"] >= lo) & (rx_sex["year"] <= hi)]
+
+        fig, ax = plt.subplots(figsize=(8, 4.5))
+        if "both" in input.rx_series():
+            ax.plot(b["year"], b["rate_per_1000"], marker="o", label="Both sexes", color=COLOR_BOTH)
+        if "male" in input.rx_series():
+            m = s[s["Sex"] == "Male"]
+            ax.plot(m["year"], m["rate_per_1000"], marker="o", label="Male", color=COLOR_MALE)
+        if "female" in input.rx_series():
+            f = s[s["Sex"] == "Female"]
+            ax.plot(f["year"], f["rate_per_1000"], marker="o", label="Female", color=COLOR_FEMALE)
+
+        ax.set_xlabel("Year")
+        ax.set_ylabel("Prescriptions per 1,000 population")
+        ax.set_title("Valproate prescription rate, TMUCRD")
+        ax.legend()
+        ax.grid(alpha=0.3)
+        fig.tight_layout()
+        return fig
+
+    @output
+    @render.table
+    def prescription_rate_table():
+        lo, hi = input.rx_yr_range()
+        sex_wide = rx_sex.pivot(index="year", columns="Sex", values=["n_prescriptions", "n_total", "rate_per_1000"])
+        sex_wide.columns = [f"{a} ({b})" for a, b in sex_wide.columns]
+        merged = rx_both.merge(sex_wide.reset_index(), on="year")
+        merged = merged[(merged["year"] >= lo) & (merged["year"] <= hi)]
+        return merged.round(2)
 
     @output
     @render.table
