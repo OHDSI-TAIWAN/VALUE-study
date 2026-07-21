@@ -256,6 +256,15 @@ qualifying drug exposure recorded around the index date.
             ui.output_table("char_table"),
         ),
     ),
+    ui.nav_control(
+        ui.a(
+            "GitHub ↗",
+            href="https://github.com/OHDSI-TAIWAN/VALUE2026",
+            target="_blank",
+            rel="noopener noreferrer",
+            class_="nav-link",
+        ),
+    ),
     title=ui.tags.span(
         ui.tags.img(src="ohdsi-logo.png", height="32px", style="margin-right:10px;vertical-align:middle;"),
         "VALUE Study — TMUCRD Report",
