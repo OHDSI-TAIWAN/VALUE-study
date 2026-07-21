@@ -69,7 +69,13 @@ concepts (RxNorm ID 745466, Code 40254). Both monotherapy and combination
 (multicomponent) formulations containing valproate are included and tracked.
 """
                 ),
-                ui.download_button("download_package", "Download VALUE2026 R package (.zip)"),
+                ui.a(
+                    "Download VALUE2026 R package (GitHub)",
+                    href="https://github.com/OHDSI-TAIWAN/VALUE2026",
+                    target="_blank",
+                    rel="noopener noreferrer",
+                    class_="btn btn-primary",
+                ),
             ),
             ui.card(
                 ui.card_header("This report"),
@@ -263,10 +269,6 @@ qualifying drug exposure recorded around the index date.
 # Server
 # ---------------------------------------------------------------------------
 def server(input, output, session):
-    @render.download(filename="VALUE2026.zip")
-    def download_package():
-        yield (here / "VALUE2026.zip").read_bytes()
-
     @output
     @render.plot
     def prevalence_plot():
